@@ -4,8 +4,6 @@
 
 Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal Naseer.
 
-Affiliation: Khalifa University
-
 ---
 
 ## 📋 Table of Contents
