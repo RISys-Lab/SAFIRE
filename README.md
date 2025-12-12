@@ -1,4 +1,4 @@
-# <img src="assets/safire.png" alt="SAFIRE" width="20"/> SAFIRE: Safety-Critical Benchmark for Fine-grained Fire and Smoke Understanding in Multimodal LLMs
+# <img src="assets/safire.png" alt="SAFIRE" width="20"/> SAFIRE: A Safety-Critical Benchmark for Fire and Smoke Scene Reasoning in Multimodal LLMs
 
 **Official repository for the SAFIRE paper (Under Review).**
 
