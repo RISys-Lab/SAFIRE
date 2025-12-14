@@ -21,7 +21,7 @@ Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal
 ## 📢 News
 
 - [12 Dec 2025] Refactored code for SAFIRE MLLM evaluation.
-- [27 Oct 2025] SAFIRE: Safety-Critical Benchmark for Fine-grained Fire and Smoke Understanding in Multimodal LLMs is submitted to ACL ARR 2025 October Submission.
+- [27 Oct 2025] SAFIRE: A Safety-Critical Benchmark for Fire and Smoke Scene Reasoning in Multimodal LLMs is submitted to ACL ARR 2025 October Submission.
 
 ## 🔥 Overview
 
