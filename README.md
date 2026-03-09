@@ -101,7 +101,7 @@ The SAFIRE benchmark consists of multiple datasets hosted on Hugging Face. The e
   - **Subsets1**: `safire_105k`
   - **Splits1**: `SAFIRE_105K`
   - **Subsets2**: `safire_11k`
-  - **Splits1**: `train`
+  - **Splits2**: `train`
 
 <!-- > More datasets will be added soon. -->
 
