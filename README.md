@@ -153,12 +153,12 @@ This output structure facilitates tracking performance metrics across different 
 
 To conduct scenario-wise `zero-shot` inference, use `safire/evaluate_mme_zero.py`.
 ```bash 
-python evaluate_mme_zero.py --model <model_name> --output "./result.xlsx" --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train" 
+python safire/evaluate_mme_zero.py --model <model_name> --output "./result.xlsx" --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train" 
 ```
 
 To conduct scenario-wise `few-shot` inference, use `safire/evaluate_mme_few.py`. 
 ```bash 
-python evaluate_mme_few.py --model <model_name> --output "./result.xlsx" --few_shot_percent 0.03 --min_train_per_class 5 --min_images_per_class 10 --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train"
+python safire/evaluate_mme_few.py --model <model_name> --output "./result.xlsx" --few_shot_percent 0.03 --min_train_per_class 5 --min_images_per_class 10 --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train"
 ```
   
 ## 📝 Citation
