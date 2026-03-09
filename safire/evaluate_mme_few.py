@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-evaluate_fewshot_svm.py
+evaluate_mme_few.py
 
 Few-shot linear-probe evaluation for CLIP-like models on a Hugging Face dataset.
 
@@ -14,46 +14,51 @@ Features:
 
 import argparse
 import os
-import re
 import random
-from io import BytesIO
 from collections import defaultdict
 
 import numpy as np
 import torch
 from datasets import load_dataset
 from transformers import CLIPModel, CLIPProcessor
-from PIL import Image
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from tqdm.auto import tqdm
 
+# Prefer importing shared helpers; fall back to local implementations if unavailable.
+try:
+    from safire.evaluate_mme_zero import clean_label, to_pil
+except Exception as e:
+    print(f"Warning: could not import clean_label/to_pil from safire.evaluate_mme_zero ({e}). "
+          f"Falling back to local implementations.")
+    import re
+    from io import BytesIO
+    from PIL import Image
 
-def clean_label(s: str) -> str:
-    """Remove leading digits, dot and spaces from a label like '1.Agricultural Fire' -> 'Agricultural Fire'."""
-    return re.sub(r'^\d+\.?\s*', '', s).strip()
+    def clean_label(s: str) -> str:
+        """Remove leading digits, dot and spaces from a label like '1.Agricultural Fire' -> 'Agricultural Fire'."""
+        return re.sub(r'^\d+\.?\s*', '', s).strip()
 
+    def to_pil(img_field):
+        """
+        Convert a HuggingFace dataset image field to a PIL.Image in RGB mode.
+        Handles:
+          - PIL.Image.Image
+          - dict with key 'bytes' (e.g., {"bytes": b'...'})
+          - raw bytes / bytearray
+        """
+        if isinstance(img_field, Image.Image):
+            return img_field.convert("RGB")
 
-def to_pil(img_field):
-    """
-    Convert a HuggingFace dataset image field to a PIL.Image in RGB mode.
-    Handles:
-      - PIL.Image.Image
-      - dict with key 'bytes' (e.g., {"bytes": b'...'})
-      - raw bytes / bytearray
-    """
-    if isinstance(img_field, Image.Image):
-        return img_field.convert("RGB")
+        from collections.abc import Mapping
+        if isinstance(img_field, Mapping) and "bytes" in img_field:
+            return Image.open(BytesIO(img_field["bytes"])).convert("RGB")
 
-    from collections.abc import Mapping
-    if isinstance(img_field, Mapping) and "bytes" in img_field:
-        return Image.open(BytesIO(img_field["bytes"])).convert("RGB")
+        if isinstance(img_field, (bytes, bytearray)):
+            return Image.open(BytesIO(img_field)).convert("RGB")
 
-    if isinstance(img_field, (bytes, bytearray)):
-        return Image.open(BytesIO(img_field)).convert("RGB")
-
-    raise TypeError(f"Unsupported image type: {type(img_field)}")
+        raise TypeError(f"Unsupported image type: {type(img_field)}")
 
 
 def evaluate_fewshot(
@@ -70,7 +75,7 @@ def evaluate_fewshot(
 ):
     """Run few-shot linear SVM evaluation and save results to Excel."""
 
-    # reproducibility
+    # Reproducibility
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -83,7 +88,10 @@ def evaluate_fewshot(
     try:
         processor = CLIPProcessor.from_pretrained(model_name)
     except Exception as e:
-        print(f"Warning: CLIPProcessor for '{model_name}' not found ({e}). Falling back to 'openai/clip-vit-large-patch14'.")
+        print(
+            f"Warning: CLIPProcessor for '{model_name}' not found ({e}). "
+            f"Falling back to 'openai/clip-vit-large-patch14'."
+        )
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
 
     # 2) Load dataset from Hugging Face
@@ -93,11 +101,7 @@ def evaluate_fewshot(
     # 3) Build category lists from 'scenario'
     raw_categories = sorted(set(ds["scenario"]))
     raw_to_clean = {raw: clean_label(raw) for raw in raw_categories}
-    clean_categories = [raw_to_clean[raw] for raw in raw_categories]
-    print(f"Found {len(clean_categories)} classes.")
-
-    # index mapping
-    label_to_index = {label: i for i, label in enumerate(clean_categories)}
+    print(f"Found {len(raw_categories)} raw classes.")
 
     # 4) Group dataset indices by scenario
     scenario_to_indices = defaultdict(list)
@@ -117,12 +121,16 @@ def evaluate_fewshot(
             print(f"  Skipping '{clean_lbl}': only {len(indices)} images (need >= {min_images_per_class}).")
             continue
 
+        indices = list(indices)  # ensure we don't mutate the stored list
         random.shuffle(indices)
-        # compute number of train samples: same semantics as original: max(min_train, int(len * percent))
+
+        # compute number of train samples
         num_train = max(min_train_per_class, int(len(indices) * few_shot_percent))
+
         # ensure at least one test sample remains
         if num_train >= len(indices):
             num_train = len(indices) - 1
+
         if num_train <= 0:
             print(f"  Skipping '{clean_lbl}': adjusted num_train <= 0.")
             continue
@@ -130,16 +138,23 @@ def evaluate_fewshot(
         train_idx = indices[:num_train]
         test_idx = indices[num_train:]
 
-        for i in train_idx:
-            train_samples.append((i, clean_lbl))
-        for i in test_idx:
-            test_samples.append((i, clean_lbl))
+        train_samples.extend((i, clean_lbl) for i in train_idx)
+        test_samples.extend((i, clean_lbl) for i in test_idx)
 
         print(f"  Class '{clean_lbl}': total={len(indices)}, train={len(train_idx)}, test={len(test_idx)}")
 
     if len(train_samples) == 0 or len(test_samples) == 0:
-        print("No train or test samples selected. Check parameters (--few_shot_percent, --min_train_per_class, --min_images_per_class).")
+        print(
+            "No train or test samples selected. "
+            "Check parameters (--few_shot_percent, --min_train_per_class, --min_images_per_class)."
+        )
         return
+
+    # IMPORTANT: Build label mapping ONLY from included labels (evaluated classes)
+    included_labels = sorted(set(lbl for _, lbl in (train_samples + test_samples)))
+    label_to_index = {lbl: i for i, lbl in enumerate(included_labels)}
+    clean_categories = included_labels
+    print(f"Evaluating {len(clean_categories)} classes after filtering.")
 
     # 6) Extract train features
     train_features = []
@@ -161,6 +176,10 @@ def evaluate_fewshot(
 
         train_features.append(feat.cpu().numpy())
         train_labels_str.append(label_str)
+
+    if len(train_features) == 0:
+        print("ERROR: No valid train features extracted (all images may have failed). Aborting.")
+        return
 
     train_features = np.vstack(train_features)
     train_labels = np.array([label_to_index[l] for l in train_labels_str], dtype=np.int64)
@@ -186,12 +205,16 @@ def evaluate_fewshot(
         test_features.append(feat.cpu().numpy())
         test_labels_str.append(label_str)
 
+    if len(test_features) == 0:
+        print("ERROR: No valid test features extracted (all images may have failed). Aborting.")
+        return
+
     test_features = np.vstack(test_features)
     test_labels = np.array([label_to_index[l] for l in test_labels_str], dtype=np.int64)
 
     # 8) Train linear SVM
     print("\nTraining SVM (linear kernel) ...")
-    clf = SVC(kernel="linear", probability=True)
+    clf = SVC(kernel="linear")  # probability=True only if you need predict_proba
     clf.fit(train_features, train_labels)
 
     # 9) Evaluate
@@ -199,26 +222,28 @@ def evaluate_fewshot(
     preds = clf.predict(test_features)
     overall_acc = accuracy_score(test_labels, preds)
 
-    # 10) Per-class accuracy
-    category_accuracy = {}
+    # 10) Per-class accuracy (only evaluated classes)
+    category_accuracy = {cat: {"correct": 0, "total": 0} for cat in clean_categories}
     for i, true_label in enumerate(test_labels):
         cat = clean_categories[true_label]
-        if cat not in category_accuracy:
-            category_accuracy[cat] = {"correct": 0, "total": 0}
+        category_accuracy[cat]["total"] += 1
         if preds[i] == true_label:
             category_accuracy[cat]["correct"] += 1
-        category_accuracy[cat]["total"] += 1
 
     results_rows = []
     for cat in clean_categories:
-        stats = category_accuracy.get(cat, {"correct": 0, "total": 1})
+        stats = category_accuracy[cat]
+        if stats["total"] == 0:
+            # Shouldn't happen because mapping is based on included labels,
+            # but keep it safe anyway.
+            continue
         acc = stats["correct"] / stats["total"]
         results_rows.append([cat, acc])
     results_rows.append(["Average Accuracy", overall_acc])
 
     df_results = pd.DataFrame(results_rows, columns=["Category", "Accuracy"])
 
-    # 11) Precision / Recall / F1
+    # 11) Precision / Recall / F1 (only evaluated classes)
     labels_all = list(range(len(clean_categories)))
     precision, recall, f1, support = precision_recall_fscore_support(
         test_labels, preds, labels=labels_all, average=None, zero_division=0
@@ -232,8 +257,9 @@ def evaluate_fewshot(
         "Precision": precision,
         "Recall": recall,
         "F1-Score": f1,
-        "Support": support
+        "Support": support,
     })
+
     metrics_df = pd.concat([
         metrics_df,
         pd.DataFrame([{
@@ -241,7 +267,7 @@ def evaluate_fewshot(
             "Precision": p_macro,
             "Recall": r_macro,
             "F1-Score": f1_macro,
-            "Support": int(np.sum(support))
+            "Support": int(np.sum(support)),
         }])
     ], ignore_index=True)
 
@@ -260,16 +286,26 @@ def evaluate_fewshot(
 
 def parse_args():
     p = argparse.ArgumentParser(description="Few-shot CLIP SVM evaluation on HF dataset.")
-    p.add_argument("--model", type=str, default="openai/clip-vit-large-patch14-336", help="transformers CLIPModel name or path")
-    p.add_argument("--dataset", type=str, default="RISys-Lab/SAFIRE_IMG", help="HuggingFace dataset id")
-    p.add_argument("--data_dir", type=str, default="safire_11K", help="data_dir argument for load_dataset")
-    p.add_argument("--split", type=str, default="train", help="dataset split to use")
-    p.add_argument("--output", type=str, default="./CLIP_fewshot_svm.xlsx", help="output Excel path")
-    p.add_argument("--few_shot_percent", type=float, default=0.03, help="fraction per-class used for training (e.g. 0.03 = 3%)")
-    p.add_argument("--min_train_per_class", type=int, default=5, help="minimum train samples per class")
-    p.add_argument("--min_images_per_class", type=int, default=10, help="minimum total images per class to include")
-    p.add_argument("--seed", type=int, default=42, help="random seed")
-    p.add_argument("--device", type=str, default=None, help="device: 'cuda' or 'cpu' (auto-detect if not set)")
+    p.add_argument("--model", type=str, default="openai/clip-vit-large-patch14",
+                   help="transformers CLIPModel name or path")
+    p.add_argument("--dataset", type=str, default="RISys-Lab/SAFIRE_IMG",
+                   help="HuggingFace dataset id")
+    p.add_argument("--data_dir", type=str, default="safire_11K",
+                   help="data_dir argument for load_dataset")
+    p.add_argument("--split", type=str, default="train",
+                   help="dataset split to use")
+    p.add_argument("--output", type=str, default="./CLIP_fewshot_svm.xlsx",
+                   help="output Excel path")
+    p.add_argument("--few_shot_percent", type=float, default=0.03,
+                   help="fraction per-class used for training (e.g. 0.03 = 3%)")
+    p.add_argument("--min_train_per_class", type=int, default=5,
+                   help="minimum train samples per class")
+    p.add_argument("--min_images_per_class", type=int, default=10,
+                   help="minimum total images per class to include")
+    p.add_argument("--seed", type=int, default=42,
+                   help="random seed")
+    p.add_argument("--device", type=str, default=None,
+                   help="device: 'cuda' or 'cpu' (auto-detect if not set)")
     return p.parse_args()
 
 
