@@ -1,6 +1,6 @@
 # <img src="assets/safire.png" alt="SAFIRE" width="20"/> SAFIRE: A Safety-Critical Benchmark for Fire and Smoke Scene Reasoning in Multimodal LLMs
 
-**Official repository for the SAFIRE paper (Under Review).**
+**Official repository for the SAFIRE paper (ACL-Oral 2026, Long Paper).**
 
 Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal Naseer.
 
