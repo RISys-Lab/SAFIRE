@@ -97,7 +97,13 @@ The SAFIRE benchmark consists of multiple datasets hosted on Hugging Face. The e
   - **Subsets**: `mcqa`
   - **Splits**: `test`
 
-> More datasets will be added soon.
+- **[RISys-Lab/SAFIRE_IMG](https://huggingface.co/datasets/RISys-Lab/SAFIRE_IMG)** (Images with Captions and Scenario Category)
+  - **Subsets1**: `safire_105k`
+  - **Splits1**: `SAFIRE_105K`
+  - **Subsets2**: `safire_11k`
+  - **Splits2**: `train`
+
+<!-- > More datasets will be added soon. -->
 
 ## 🧪 Evaluation
 
@@ -142,10 +148,19 @@ The evaluation script generates a JSON file named `<model_name>_<timestamp>-resu
 This output structure facilitates tracking performance metrics across different models and specific scenarios.
 </details>
 
-### 2. Vision-Language Encoder Evaluation (FireCLIP)
+### 2. Vision-Language Encoder Evaluation
+> Fine-tuned domain specific [FireCLIP](https://huggingface.co/fesvhtr/FireCLIP-ViT-L14-336) can be found in our Hugging Face repo.
 
-Coming soon...
+To conduct scenario-wise `zero-shot` inference, use `safire/evaluate_mme_zero.py`.
+```bash 
+python safire/evaluate_mme_zero.py --model <model_name> --output "./result.xlsx" --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train" 
+```
 
+To conduct scenario-wise `few-shot` inference, use `safire/evaluate_mme_few.py`. 
+```bash 
+python safire/evaluate_mme_few.py --model <model_name> --output "./result.xlsx" --few_shot_percent 0.03 --min_train_per_class 5 --min_images_per_class 10 --dataset "RISys-Lab/SAFIRE_IMG" --data_dir "safire_11K" --split "train"
+```
+  
 ## 📝 Citation
 
 If you find SAFIRE useful in your research, please consider citing our paper:
