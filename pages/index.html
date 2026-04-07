@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFIRE: Safety-Critical Benchmark for Fire and Smoke</title>
+    <link rel="icon" href="risys-lab.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #ef4444, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#ef4444',
+                            orange: '#f97316',
+                            dark: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+
+        function copyBibtex() {
+            const bibtex = document.getElementById('bibtex-content').innerText;
+            const btn = document.getElementById('copy-btn');
+
+            // Fallback for copy
+            const textArea = document.createElement("textarea");
+            textArea.value = bibtex;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
+                setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="font-bold text-xl tracking-tight text-slate-900 flex items-center gap-2">
+                <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path>
+                </svg>
+                SAFIRE
+            </div>
+            <div class="hidden sm:flex space-x-8">
+                <a href="#abstract"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Abstract</a>
+                <a href="#dataset"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Dataset</a>
+                <a href="#pipeline"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Pipeline</a>
+                <a href="#samples"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Samples</a>
+                <a href="#results"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Results</a>
+                <a href="#citation"
+                    class="text-sm font-medium text-slate-600 hover:text-orange-500 transition-colors">Citation</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="pt-32 pb-16 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
+        <div
+            class="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm font-semibold tracking-wide mb-6">
+            ACL 2026 Main Conference
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-8 leading-tight">
+            <span class="gradient-text">SAFIRE <img src="static/safire.png" alt="SAFIRE"
+                    class="inline-block h-[1em] w-auto mx-1 align-bottom pb-1"></span>:
+            Safety-Critical Benchmark for Fine-grained Fire and Smoke
+            Understanding in Multimodal LLMs
+        </h1>
+
+        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-8 text-lg font-medium text-slate-700">
+            <span>Pengfei Li</span>
+            <span>Naufal Suryanto</span>
+            <span>Sicheng Zhang</span>
+            <span>Mohammad Alsharid</span>
+            <span>Muzammal Naseer</span>
+        </div>
+
+        <div class="text-lg font-semibold text-slate-500 mb-8 tracking-wide">
+            Khalifa University
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4 mt-10">
+            <a href="#"
+                class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-slate-900 hover:bg-slate-800 shadow-sm transition-all duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
+                Paper
+            </a>
+            <a href="https://github.com/RISys-Lab/SAFIRE"
+                class="inline-flex items-center justify-center px-6 py-3 border border-slate-300 text-base font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition-all duration-200">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                Code
+            </a>
+            <a href="https://huggingface.co/collections/RISys-Lab/safire-datasets-benchmarks-and-model"
+                class="inline-flex items-center justify-center px-6 py-3 border border-slate-300 text-base font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition-all duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                    </path>
+                </svg>
+                Dataset
+            </a>
+        </div>
+    </div>
+
+    <!-- Abstract -->
+    <section id="abstract" class="py-16 bg-white border-y border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">Abstract</h2>
+            <p class="text-lg text-slate-600 leading-relaxed text-justify">
+                Multimodal Large Language Models (MLLMs) show strong progress on vision-language tasks, yet their
+                reliability in safety-critical settings remains underexplored. Fire-smoke understanding is central to
+                public safety and disaster response, but existing benchmarks lack diverse real-world scenarios and
+                context-aware evaluation. We introduce <strong>SAFIRE</strong>, the first large-scale benchmark for
+                fire-smoke understanding in MLLMs, comprising <strong>105K images</strong> from <strong>20
+                    scenarios</strong> and <strong>224K multiple-choice VQA (MCVQA) pairs</strong> across <strong>10
+                    evaluation dimensions</strong>, from basic perception to higher-order reasoning. A multi-stage
+                filtering pipeline with model-guided majority voting ensures annotation quality. Evaluating seven
+                open-source MLLMs (7B–72B) yields 57.5% average accuracy, exposing major gaps in safety-critical
+                reasoning. We further provide a domain-specific image-caption set and show that adapting vision encoders
+                with only 3% of our supervised data boosts fire-scene classification by 12.7%, underscoring the
+                inadequacy of generic features and the potential of lightweight adaptation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Dataset Overview -->
+    <section id="dataset" class="py-20 bg-slate-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">A Comprehensive Benchmark</h2>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">SAFIRE tests MLLMs across a diverse set of
+                    real-world scenarios, testing everything from basic perception to complex, causal reasoning.</p>
+            </div>
+
+            <!-- Highlights Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <div class="text-4xl font-extrabold text-orange-500 mb-2">105K+</div>
+                    <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Images</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <div class="text-4xl font-extrabold text-orange-500 mb-2">224K+</div>
+                    <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">MCVQA Pairs</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <div class="text-4xl font-extrabold text-orange-500 mb-2">20</div>
+                    <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Real-World Scenarios</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <div class="text-4xl font-extrabold text-orange-500 mb-2">10</div>
+                    <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">Reasoning Dimensions</div>
+                </div>
+            </div>
+
+            <!-- Scenarios & Dimensions -->
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- 20 Scenarios -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                    <div class="flex items-center mb-6">
+                        <div class="p-3 bg-red-100 rounded-lg text-red-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">5 Scene Categories</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex flex-col">
+                            <span class="font-semibold text-slate-800"><span class="mr-2">🌋</span>Natural
+                                Process</span>
+                            <span class="text-sm text-slate-500">Agriculture, Forest, Volcano, Meteorite</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="font-semibold text-slate-800"><span class="mr-2">🏭</span>Industrial
+                                Process</span>
+                            <span class="text-sm text-slate-500">Rocket Fire, Gas Flares, Steel Forge</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="font-semibold text-slate-800"><span class="mr-2">💥</span>Accident
+                                Process</span>
+                            <span class="text-sm text-slate-500">House Fire, Car Fire, Garbage Fire, Explosion</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="font-semibold text-slate-800"><span class="mr-2">🎆</span>Entertainment</span>
+                            <span class="text-sm text-slate-500">Firework, Hot Balloon, Barbecue, Campfire</span>
+                        </li>
+                        <li class="flex flex-col">
+                            <span class="font-semibold text-slate-800"><span class="mr-2">🕯️</span>Controlled
+                                Process</span>
+                            <span class="text-sm text-slate-500">Torch Fire, Candlelight, Smoking, Incense Burning, Gas
+                                Cooking</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 10 Dimensions -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                    <div class="flex items-center mb-6">
+                        <div class="p-3 bg-orange-100 rounded-lg text-orange-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">10 Reasoning Dimensions</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm text-slate-700 font-medium">
+                        <div class="flex items-center"><span class="mr-2 text-lg">🔢</span> Target Counting</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🗂️</span> Classification</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🧠</span> General Reasoning</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🎯</span> Fire/Smoke Intention</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🎭</span> Emotional Response</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">💬</span> Linguistic Polysemy</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🔍</span> Attribute Recognition</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🗺️</span> Spatial Correlation</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">📍</span> Position Ident.</div>
+                        <div class="flex items-center"><span class="mr-2 text-lg">🚫</span> Irrelevant Object Det.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SAFIRE Pipeline -->
+    <section id="pipeline" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">The SAFIRE Pipeline</h2>
+                <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                    A rigorous multi-stage framework integrating data collection, filtering, hierarchical structuring,
+                    and evaluation across both MLLMs and multimodal encoders.
+                </p>
+            </div>
+
+            <div class="flex items-center justify-center mt-8">
+                <img src="static/pipelines.png" alt="SAFIRE Pipeline Diagram" class="w-full h-auto object-contain"
+                    style="max-height: 600px;" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Illustrative MCVQA Samples -->
+    <section id="samples" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Illustrative MCVQA Samples</h2>
+                <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                    Questions span across distinct reasoning dimensions, validating visual grounding, spatial
+                    correlation, predictive context, and linguistic disambiguation.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Sample 1: Scene Understanding -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Scene Understanding <span
+                                class="text-slate-500 font-normal">(Agriculture)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/1.agriculture.png" alt="Agriculture fire"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Agriculture)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What kind of flame is this?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Industrial fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Forest fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Home accident,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                D. Agricultural fire</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 2: Target Counting -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Target Counting <span
+                                class="text-slate-500 font-normal">(Barbecue)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/2.barbecue.png" alt="Barbecue" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Barbecue)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">How many distinct fire are visible?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. None,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                B. One,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Two,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. More than two</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 3: Classification -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Classification <span
+                                class="text-slate-500 font-normal">(Campfire)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/3.campfire.png" alt="Campfire" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Campfire)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What kind of smoke/flare?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Smoke,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Both,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. None</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 4: Positional Info -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Positional Info. <span
+                                class="text-slate-500 font-normal">(Rocket Launch)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/4.rocket.png" alt="Rocket Launch"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Rocket Launch)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">Where is the fire located?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Left side,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                B. Right side,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Centre,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not visible</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 5: Spatial Relation -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Spatial Relation <span
+                                class="text-slate-500 font-normal">(Firework)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/5.firework.png" alt="Firework" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Firework)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the spatial relation?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Smoke above,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Smoke to the left,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Smoke to the right,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not applicable</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 6: Danger Level -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Danger Level <span
+                                class="text-slate-500 font-normal">(Volcano)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/6.volcano.png" alt="Volcano" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Volcano)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the apparent danger level?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Low,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Moderate,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                C. High</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. N/A</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 7: Broader Indication -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Broader Indication <span
+                                class="text-slate-500 font-normal">(Gas Exploitation)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/7.gas_exploitation.png" alt="Gas Exploitation"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Gas Exploitation)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">Is the fire controlled?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Yes,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. No,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. No fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Cannot tell</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 8: Reasoning -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Reasoning <span
+                                class="text-slate-500 font-normal">(Burning Car)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/8.burning_car.png" alt="Burning Car"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Burning Car)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">How would people react to this fire/smoke?
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Call for help,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Ignore it,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Evacuate the area,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Take pictures</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 9: Fire Intention -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fire Intention <span
+                                class="text-slate-500 font-normal">(Torch)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/9.torch.png" alt="Torch" class="w-full h-full object-cover"
+                                onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Torch)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the purpose of this fire?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Accident,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                B. Entertainment,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Industry production,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Culture activity</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 10: Fire Environment -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fire Environment <span
+                                class="text-slate-500 font-normal">(Candlelight)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/10.candlelight.png" alt="Candlelight"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Candlelight)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What time of the day does this fire
+                            suggests?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Day time,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Nighttime,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                C. Indoor lighting,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not determinable</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 11: Prediction -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Prediction <span
+                                class="text-slate-500 font-normal">(Incense Burning)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/11.incense.png" alt="Incense Burning"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Incense Burning)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What will happen next to the Fire/Smoke?
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Fire expands,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                B. Smoke disperses,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Fire quenches,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Explosion occurs</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 12: Fire/Smoke Features -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Features <span
+                                class="text-slate-500 font-normal">(Hot Air Balloon)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/12.balloon.png" alt="Hot Air Balloon"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Hot Air Balloon)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the colour of this fire?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Orange/Yellow,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Red,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Blue,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. No flame</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 13: Fine-grained Intensity -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fine-grained Intensity <span
+                                class="text-slate-500 font-normal">(Explosion)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/13.explosion.png" alt="Explosion"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Explosion)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">How much smoke is visible in the image?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. No smoke,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Light,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Moderate,</li>
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                D. Thick smoke</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 14: Modality Detection -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Modality Detection <span
+                                class="text-slate-500 font-normal">(Steel Forging)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/14.steel_forging.png" alt="Steel Forging"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Steel Forging)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">Is this a real fire or icon?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Real Fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Icons/symbol,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Simulations,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not sure"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sample 15: Language Polysemy -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-100 p-4 border-b border-slate-200">
+                        <div class="font-bold text-slate-800 text-sm mb-1">Language Polysemy <span
+                                class="text-slate-500 font-normal">(Meteorite Fire)</span></div>
+                        <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
+                            <img src="static/examples/15.meteorite.png" alt="Meteorite Fire"
+                                class="w-full h-full object-cover" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
+                                style="z-index:-1">Image Placeholder<br>(Meteorite Fire)</div>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is "on fire" means here?</p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li
+                                class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
+                                A. Literal Fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Excited situation,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Under attack,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Figurative speech</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">MLLM Evaluation Results</h2>
+                <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                    Evaluating seven open-source MLLMs (from 7B to 72B parameters) reveals that despite impressive
+                    general capabilities, safety-critical fire and smoke reasoning remains a significant challenge.
+                </p>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="mb-16">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-slate-900">Table 3: Accuracy (%) of MLLMs on the 20-scenario
+                        fire–smoke MCVQA benchmark.</h3>
+                    <p class="text-sm text-slate-600 mt-2"><strong>Bold</strong> indicates the highest accuracy in each
+                        column (i.e., best-performing per scenario), and <u
+                            class="decoration-slate-400 underline-offset-4">underlined</u> indicates the lowest.</p>
+                </div>
+
+                <!-- Table 3 Part 1 -->
+                <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm mb-8">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm text-center whitespace-nowrap">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th rowspan="2"
+                                    class="px-4 py-3 font-semibold text-slate-800 text-left align-middle border-r border-slate-200">
+                                    Model</th>
+                                <th rowspan="2"
+                                    class="px-4 py-3 font-semibold text-slate-800 align-middle border-r border-slate-200">
+                                    Size (B)</th>
+                                <th colspan="4"
+                                    class="px-4 py-2 font-semibold text-slate-800 border-b border-r border-slate-200">
+                                    Natural Process</th>
+                                <th colspan="3"
+                                    class="px-4 py-2 font-semibold text-slate-800 border-b border-r border-slate-200">
+                                    Industrial Process</th>
+                                <th colspan="4"
+                                    class="px-4 py-2 font-semibold text-slate-800 border-b border-slate-200">Accident
+                                    Process</th>
+                            </tr>
+                            <tr>
+                                <th class="px-3 py-2 font-medium text-slate-600">Agricul.</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Volcano</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Forest</th>
+                                <th class="px-3 py-2 font-medium text-slate-600 border-r border-slate-200">Meteorite
+                                </th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Rocket</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Indust.</th>
+                                <th class="px-3 py-2 font-medium text-slate-600 border-r border-slate-200">Steel</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Explos.</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">House</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Car</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Garbage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">7</td>
+                                <td class="px-3 py-3">50.3</td>
+                                <td class="px-3 py-3">62.7</td>
+                                <td class="px-3 py-3">63.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">59.2</td>
+                                <td class="px-3 py-3">50.1</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">59.8</td>
+                                <td class="px-3 py-3 border-r border-slate-200">59.5</td>
+                                <td class="px-3 py-3">57.0</td>
+                                <td class="px-3 py-3">61.7</td>
+                                <td class="px-3 py-3">49.2</td>
+                                <td class="px-3 py-3">58.4</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">LLaMA-3.2</td>
+                                <td class="px-4 py-3 border-r border-slate-200">11</td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">46.0</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">47.6</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">54.4</u></td>
+                                <td class="px-3 py-3 border-r border-slate-200"><u
+                                        class="decoration-slate-400 underline-offset-4">37.7</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">43.3</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">52.1</u></td>
+                                <td class="px-3 py-3 border-r border-slate-200"><u
+                                        class="decoration-slate-400 underline-offset-4">42.7</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">41.8</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">49.1</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">46.0</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">42.7</u></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Gemma-3</td>
+                                <td class="px-4 py-3 border-r border-slate-200">12</td>
+                                <td class="px-3 py-3">50.3</td>
+                                <td class="px-3 py-3">61.9</td>
+                                <td class="px-3 py-3">62.0</td>
+                                <td class="px-3 py-3 border-r border-slate-200">56.1</td>
+                                <td class="px-3 py-3">51.3</td>
+                                <td class="px-3 py-3">57.8</td>
+                                <td class="px-3 py-3 border-r border-slate-200">57.4</td>
+                                <td class="px-3 py-3">53.6</td>
+                                <td class="px-3 py-3">61.7</td>
+                                <td class="px-3 py-3">48.9</td>
+                                <td class="px-3 py-3">58.5</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Mistral-3.1</td>
+                                <td class="px-4 py-3 border-r border-slate-200">24</td>
+                                <td class="px-3 py-3">49.7</td>
+                                <td class="px-3 py-3">64.4</td>
+                                <td class="px-3 py-3">59.4</td>
+                                <td class="px-3 py-3 border-r border-slate-200">58.2</td>
+                                <td class="px-3 py-3">50.2</td>
+                                <td class="px-3 py-3">55.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">59.9</td>
+                                <td class="px-3 py-3">58.0</td>
+                                <td class="px-3 py-3">61.7</td>
+                                <td class="px-3 py-3">49.3</td>
+                                <td class="px-3 py-3">58.9</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Gemma-3</td>
+                                <td class="px-4 py-3 border-r border-slate-200">27</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">54.5</td>
+                                <td class="px-3 py-3">61.7</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">66.0</td>
+                                <td class="px-3 py-3 border-r border-slate-200">54.4</td>
+                                <td class="px-3 py-3">51.9</td>
+                                <td class="px-3 py-3">56.0</td>
+                                <td class="px-3 py-3 border-r border-slate-200">55.6</td>
+                                <td class="px-3 py-3">56.3</td>
+                                <td class="px-3 py-3">63.2</td>
+                                <td class="px-3 py-3">48.9</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">61.3</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">32</td>
+                                <td class="px-3 py-3">49.5</td>
+                                <td class="px-3 py-3">64.4</td>
+                                <td class="px-3 py-3">62.4</td>
+                                <td class="px-3 py-3 border-r border-slate-200">60.1</td>
+                                <td class="px-3 py-3">51.6</td>
+                                <td class="px-3 py-3">58.6</td>
+                                <td class="px-3 py-3 border-r border-slate-200">57.3</td>
+                                <td class="px-3 py-3">59.3</td>
+                                <td class="px-3 py-3">63.4</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">51.3</td>
+                                <td class="px-3 py-3">61.1</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">72</td>
+                                <td class="px-3 py-3">53.0</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">67.2</td>
+                                <td class="px-3 py-3">65.8</td>
+                                <td class="px-3 py-3 font-bold text-slate-900 border-r border-slate-200">62.8</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">53.2</td>
+                                <td class="px-3 py-3">59.7</td>
+                                <td class="px-3 py-3 font-bold text-slate-900 border-r border-slate-200">62.5</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">59.5</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">66.5</td>
+                                <td class="px-3 py-3">50.8</td>
+                                <td class="px-3 py-3">61.1</td>
+                            </tr>
+                            <tr class="bg-slate-50 border-t-2 border-slate-300 font-medium">
+                                <td class="px-4 py-3 text-left text-slate-900 border-r border-slate-200">Scene Avg.</td>
+                                <td class="px-4 py-3 border-r border-slate-200">–</td>
+                                <td class="px-3 py-3">50.5</td>
+                                <td class="px-3 py-3">61.4</td>
+                                <td class="px-3 py-3">61.9</td>
+                                <td class="px-3 py-3 border-r border-slate-200">55.5</td>
+                                <td class="px-3 py-3">50.2</td>
+                                <td class="px-3 py-3">57.0</td>
+                                <td class="px-3 py-3 border-r border-slate-200">56.4</td>
+                                <td class="px-3 py-3">55.1</td>
+                                <td class="px-3 py-3">61.0</td>
+                                <td class="px-3 py-3">49.2</td>
+                                <td class="px-3 py-3">57.4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table 3 Part 2 -->
+                <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm text-center whitespace-nowrap">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th rowspan="2"
+                                    class="px-4 py-3 font-semibold text-slate-800 text-left align-middle border-r border-slate-200">
+                                    Model</th>
+                                <th rowspan="2"
+                                    class="px-4 py-3 font-semibold text-slate-800 align-middle border-r border-slate-200">
+                                    Size (B)</th>
+                                <th colspan="4"
+                                    class="px-4 py-2 font-semibold text-slate-800 border-b border-r border-slate-200">
+                                    Entertain & Celebrate</th>
+                                <th colspan="5"
+                                    class="px-4 py-2 font-semibold text-slate-800 border-b border-r border-slate-200">
+                                    Civil-Controlled Process</th>
+                                <th rowspan="2" class="px-4 py-3 font-bold text-slate-900 align-middle">All<br>Avg.</th>
+                            </tr>
+                            <tr>
+                                <th class="px-3 py-2 font-medium text-slate-600">Firework</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Hot Balloon</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Barbecue</th>
+                                <th class="px-3 py-2 font-medium text-slate-600 border-r border-slate-200">Campfire</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Torch</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Candle</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Incense</th>
+                                <th class="px-3 py-2 font-medium text-slate-600">Cooking</th>
+                                <th class="px-3 py-2 font-medium text-slate-600 border-r border-slate-200">Smoking</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">7</td>
+                                <td class="px-3 py-3">60.8</td>
+                                <td class="px-3 py-3">59.2</td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">54.9</u></td>
+                                <td class="px-3 py-3 font-bold text-slate-900 border-r border-slate-200">62.4</td>
+                                <td class="px-3 py-3">61.9</td>
+                                <td class="px-3 py-3">55.5</td>
+                                <td class="px-3 py-3">62.1</td>
+                                <td class="px-3 py-3">65.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">60.5</td>
+                                <td class="px-4 py-3 font-medium">58.6</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">LLaMA-3.2</td>
+                                <td class="px-4 py-3 border-r border-slate-200">11</td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">43.4</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">47.8</u></td>
+                                <td class="px-3 py-3">45.6</td>
+                                <td class="px-3 py-3 border-r border-slate-200"><u
+                                        class="decoration-slate-400 underline-offset-4">47.0</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">43.4</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">41.7</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">47.6</u></td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">44.8</u></td>
+                                <td class="px-3 py-3 border-r border-slate-200"><u
+                                        class="decoration-slate-400 underline-offset-4">37.8</u></td>
+                                <td class="px-4 py-3 font-medium"><u
+                                        class="decoration-slate-400 underline-offset-4">44.8</u></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Gemma-3</td>
+                                <td class="px-4 py-3 border-r border-slate-200">12</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">66.4</td>
+                                <td class="px-3 py-3">63.8</td>
+                                <td class="px-3 py-3">54.7</td>
+                                <td class="px-3 py-3 border-r border-slate-200">59.8</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">65.6</td>
+                                <td class="px-3 py-3">55.9</td>
+                                <td class="px-3 py-3">62.5</td>
+                                <td class="px-3 py-3">61.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">62.1</td>
+                                <td class="px-4 py-3 font-medium">58.6</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Mistral-3.1</td>
+                                <td class="px-4 py-3 border-r border-slate-200">24</td>
+                                <td class="px-3 py-3">64.4</td>
+                                <td class="px-3 py-3">59.5</td>
+                                <td class="px-3 py-3">56.3</td>
+                                <td class="px-3 py-3 border-r border-slate-200">57.0</td>
+                                <td class="px-3 py-3">60.9</td>
+                                <td class="px-3 py-3">60.9</td>
+                                <td class="px-3 py-3">63.8</td>
+                                <td class="px-3 py-3">68.2</td>
+                                <td class="px-3 py-3 border-r border-slate-200">64.5</td>
+                                <td class="px-4 py-3 font-medium">59.2</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Gemma-3</td>
+                                <td class="px-4 py-3 border-r border-slate-200">27</td>
+                                <td class="px-3 py-3">64.9</td>
+                                <td class="px-3 py-3">61.4</td>
+                                <td class="px-3 py-3">55.2</td>
+                                <td class="px-3 py-3 border-r border-slate-200">58.2</td>
+                                <td class="px-3 py-3">63.8</td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">53.7</u></td>
+                                <td class="px-3 py-3">58.6</td>
+                                <td class="px-3 py-3">62.2</td>
+                                <td class="px-3 py-3 border-r border-slate-200">64.1</td>
+                                <td class="px-4 py-3 font-medium">58.7</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">32</td>
+                                <td class="px-3 py-3">62.5</td>
+                                <td class="px-3 py-3">56.3</td>
+                                <td class="px-3 py-3">56.8</td>
+                                <td class="px-3 py-3 border-r border-slate-200">57.4</td>
+                                <td class="px-3 py-3">61.5</td>
+                                <td class="px-3 py-3">59.3</td>
+                                <td class="px-3 py-3">66.4</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">70.5</td>
+                                <td class="px-3 py-3 font-bold text-slate-900 border-r border-slate-200">65.7</td>
+                                <td class="px-4 py-3 font-medium">59.8</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Qwen2.5-VL</td>
+                                <td class="px-4 py-3 border-r border-slate-200">72</td>
+                                <td class="px-3 py-3">64.6</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">63.5</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">60.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">61.4</td>
+                                <td class="px-3 py-3">65.9</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">63.6</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">68.7</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">73.1</td>
+                                <td class="px-3 py-3 border-r border-slate-200">68.1</td>
+                                <td class="px-4 py-3 font-bold text-slate-900">62.7</td>
+                            </tr>
+                            <tr class="bg-slate-50 border-t-2 border-slate-300 font-medium">
+                                <td class="px-4 py-3 text-left text-slate-900 border-r border-slate-200">Scene Avg.</td>
+                                <td class="px-4 py-3 border-r border-slate-200">–</td>
+                                <td class="px-3 py-3">61.0</td>
+                                <td class="px-3 py-3">58.8</td>
+                                <td class="px-3 py-3"><u class="decoration-slate-400 underline-offset-4">54.8</u></td>
+                                <td class="px-3 py-3 border-r border-slate-200">57.6</td>
+                                <td class="px-3 py-3">60.4</td>
+                                <td class="px-3 py-3">55.8</td>
+                                <td class="px-3 py-3">61.4</td>
+                                <td class="px-3 py-3 font-bold text-slate-900">63.6</td>
+                                <td class="px-3 py-3 border-r border-slate-200">60.4</td>
+                                <td class="px-4 py-3">57.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Table 4 -->
+            <div class="mb-10">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-slate-900">Table 4: Accuracy (%) across 10 evaluation dimensions
+                        on SAFIRE.</h3>
+                    <p class="text-sm text-slate-600 mt-2"><strong>Bold</strong> indicates the highest accuracy per row
+                        (i.e., best-performing model for each dimension), while <u
+                            class="decoration-slate-400 underline-offset-4">underlined</u> indicates the lowest
+                        accuracy.</p>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm text-center whitespace-nowrap">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold text-slate-800 text-left border-r border-slate-200">
+                                    Dimension</th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">Qwen2.5VL<br><span
+                                        class="text-xs text-slate-500 font-normal">7B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">LLaMA3.2<br><span
+                                        class="text-xs text-slate-500 font-normal">11B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">Gemma3<br><span
+                                        class="text-xs text-slate-500 font-normal">12B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">Mistral3.1<br><span
+                                        class="text-xs text-slate-500 font-normal">24B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">Gemma3<br><span
+                                        class="text-xs text-slate-500 font-normal">27B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800">Qwen2.5VL<br><span
+                                        class="text-xs text-slate-500 font-normal">32B</span></th>
+                                <th class="px-4 py-3 font-semibold text-slate-800 border-r border-slate-200">
+                                    Qwen2.5VL<br><span class="text-xs text-slate-500 font-normal">72B</span></th>
+                                <th class="px-4 py-3 font-bold text-slate-900">Avg.<br><span
+                                        class="text-xs text-slate-500 font-normal">(%)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Target Counting
+                                </td>
+                                <td class="px-4 py-3 font-bold text-slate-900">63.4</td>
+                                <td class="px-4 py-3">55.8</td>
+                                <td class="px-4 py-3">49.0</td>
+                                <td class="px-4 py-3">62.3</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">51.2</u></td>
+                                <td class="px-4 py-3">59.8</td>
+                                <td class="px-4 py-3 border-r border-slate-200">60.3</td>
+                                <td class="px-4 py-3">57.4</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Classification
+                                </td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">72.4</u></td>
+                                <td class="px-4 py-3">73.3</td>
+                                <td class="px-4 py-3">73.2</td>
+                                <td class="px-4 py-3">73.6</td>
+                                <td class="px-4 py-3 font-bold text-slate-900">75.7</td>
+                                <td class="px-4 py-3">72.6</td>
+                                <td class="px-4 py-3 border-r border-slate-200">73.3</td>
+                                <td class="px-4 py-3">73.4</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 border-t border-slate-300">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">General Reasoning
+                                </td>
+                                <td class="px-4 py-3">56.3</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">30.9</u></td>
+                                <td class="px-4 py-3">59.1</td>
+                                <td class="px-4 py-3">57.7</td>
+                                <td class="px-4 py-3">55.0</td>
+                                <td class="px-4 py-3">57.7</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">63.3</td>
+                                <td class="px-4 py-3">54.3</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Fire/Smoke
+                                    Intention</td>
+                                <td class="px-4 py-3">49.9</td>
+                                <td class="px-4 py-3">54.3</td>
+                                <td class="px-4 py-3">51.3</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">47.2</u></td>
+                                <td class="px-4 py-3 font-bold text-slate-900">56.1</td>
+                                <td class="px-4 py-3">50.8</td>
+                                <td class="px-4 py-3 border-r border-slate-200">52.0</td>
+                                <td class="px-4 py-3">51.7</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Emotional Response
+                                </td>
+                                <td class="px-4 py-3">36.0</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">21.4</u></td>
+                                <td class="px-4 py-3">34.9</td>
+                                <td class="px-4 py-3">34.0</td>
+                                <td class="px-4 py-3">37.8</td>
+                                <td class="px-4 py-3">44.7</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">57.1</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">38.0</u></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Linguistic
+                                    Polysemy</td>
+                                <td class="px-4 py-3">54.4</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">20.8</u></td>
+                                <td class="px-4 py-3">65.1</td>
+                                <td class="px-4 py-3">74.3</td>
+                                <td class="px-4 py-3">71.8</td>
+                                <td class="px-4 py-3">71.2</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">78.3</td>
+                                <td class="px-4 py-3">62.3</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 border-t border-slate-300">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Fire/Smoke
+                                    Attributes</td>
+                                <td class="px-4 py-3">53.7</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">49.3</u></td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">49.3</u></td>
+                                <td class="px-4 py-3">50.5</td>
+                                <td class="px-4 py-3">49.9</td>
+                                <td class="px-4 py-3">52.7</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">54.9</td>
+                                <td class="px-4 py-3">51.5</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Fire/Smoke Spatial
+                                    Corr.</td>
+                                <td class="px-4 py-3">84.7</td>
+                                <td class="px-4 py-3">80.7</td>
+                                <td class="px-4 py-3">84.7</td>
+                                <td class="px-4 py-3">82.2</td>
+                                <td class="px-4 py-3">83.4</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">78.2</u></td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">87.8</td>
+                                <td class="px-4 py-3 font-bold text-slate-900">83.1</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Position
+                                    Identification</td>
+                                <td class="px-4 py-3">51.7</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">35.4</u></td>
+                                <td class="px-4 py-3 font-bold text-slate-900">63.1</td>
+                                <td class="px-4 py-3">49.6</td>
+                                <td class="px-4 py-3">56.9</td>
+                                <td class="px-4 py-3">49.3</td>
+                                <td class="px-4 py-3">48.7</td>
+                                <td class="px-4 py-3 border-l border-slate-200">50.7</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 text-left font-medium border-r border-slate-200">Irrelevant Object
+                                    Detect.</td>
+                                <td class="px-4 py-3">67.4</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">31.5</u></td>
+                                <td class="px-4 py-3">59.5</td>
+                                <td class="px-4 py-3">64.5</td>
+                                <td class="px-4 py-3 font-bold text-slate-900">75.3</td>
+                                <td class="px-4 py-3">74.0</td>
+                                <td class="px-4 py-3 border-r border-slate-200">61.6</td>
+                                <td class="px-4 py-3">62.0</td>
+                            </tr>
+                            <tr class="bg-slate-50 border-t-2 border-slate-300 font-medium">
+                                <td class="px-4 py-3 text-left text-slate-900 border-r border-slate-200">Model Average
+                                </td>
+                                <td class="px-4 py-3">59.0</td>
+                                <td class="px-4 py-3"><u class="decoration-slate-400 underline-offset-4">45.3</u></td>
+                                <td class="px-4 py-3">58.9</td>
+                                <td class="px-4 py-3">59.6</td>
+                                <td class="px-4 py-3">61.3</td>
+                                <td class="px-4 py-3">61.1</td>
+                                <td class="px-4 py-3 font-bold text-slate-900 border-r border-slate-200">63.7</td>
+                                <td class="px-4 py-3">58.4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div
+                class="mt-8 p-4 bg-blue-50 text-blue-800 rounded-xl text-sm leading-relaxed border border-blue-100 flex items-start">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0 mt-0.5 text-blue-500" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <strong>Key Insight:</strong> Most models achieve mid-to-high performance on structurally
+                    straightforward tasks like Scene Classification and Spatial Correlation, but struggle significantly
+                    on causal, human-centric, or ambiguous reasoning tasks (e.g., Emotional Response, Fire Intention).
+                    Furthermore, adapting vision encoders with just <strong>3% supervised data yields a 12.7%
+                        boost</strong>, indicating high potential for lightweight domain adaptation.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Citation Section -->
+    <section id="citation" class="py-20 bg-slate-900 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-4">Citation</h2>
+                <p class="text-slate-400">If you find SAFIRE useful for your research, please consider citing our paper.
+                </p>
+            </div>
+
+            <div
+                class="relative bg-slate-800 rounded-xl p-6 font-mono text-sm text-slate-300 overflow-x-auto shadow-inner border border-slate-700">
+                <button id="copy-btn" onclick="copyBibtex()"
+                    class="absolute top-4 right-4 inline-flex items-center px-3 py-1.5 border border-slate-600 rounded-md text-xs font-medium bg-slate-700 hover:bg-slate-600 text-white transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Copy BibTeX
+                </button>
+                <pre id="bibtex-content" class="whitespace-pre-wrap pr-24"><code>@inproceedings{li2026safire,
+  title={SAFIRE: Safety-Critical Benchmark for Fine-grained Fire and Smoke Understanding in Multimodal LLMs},
+  author={Li, Pengfei and Suryanto, Naufal and Zhang, Sicheng and Alsharid, Mohammad and Naseer, Muzammal},
+  booktitle={Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  year={2026}
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-8 text-center border-t border-slate-800">
+        <p class="text-slate-500 text-sm">
+            &copy; 2026 SAFIRE Authors. Accepted to ACL 2026.<br>
+            Released under CC BY-NC 4.0 license for non-commercial research use.
+        </p>
+    </footer>
+
+</body>
+
+</html>
