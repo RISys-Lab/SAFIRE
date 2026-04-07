@@ -1,5 +1,12 @@
 # <img src="assets/safire.png" alt="SAFIRE" width="20"/> SAFIRE: A Safety-Critical Benchmark for Fire and Smoke Scene Reasoning in Multimodal LLMs
 
+<p align="center">
+  📄 <a href="#">Paper</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  🌐 <a href="https://risys-lab.github.io/SAFIRE">Project Page</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  📘 <a href="https://huggingface.co/collections/RISys-Lab/safire-datasets-benchmarks-and-model">Dataset and Benchmarks</a>
+</p>
+
+
 **Official repository for the SAFIRE paper (ACL 2026).**
 
 Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal Naseer.
