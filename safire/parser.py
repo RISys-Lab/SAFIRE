@@ -30,10 +30,11 @@ def create_parser(model="Qwen/Qwen2.5-VL-7B-Instruct", max_model_len=2048):
     # Add dataset args
     dataset_group = parser.add_argument_group("Dataset parameters")
     dataset_group.add_argument("--dataset", type=str, default='RISys-Lab/SAFIRE_MCVQA', help='Name of the dataset (default: RISys-Lab/SAFIRE_MCVQA)')
-    dataset_group.add_argument('--dataset_subset', type=str, default='mcqa', help='Dataset subset (default: mcqa)')
+    dataset_group.add_argument('--dataset-subset', type=str, default='mcqa', help='Dataset subset (default: mcqa)')
     dataset_group.add_argument('--split', type=str, default='test', help='Dataset split (default: test)')
-    dataset_group.add_argument('--output_dir', type=str, default='./outputs', help='Output directory path (default: ./outputs)')
+    dataset_group.add_argument('--output-dir', type=str, default='./outputs', help='Output directory path (default: ./outputs)')
     dataset_group.add_argument('--batch-size', type=int, default=128, help='Batch size for inference (default: 128)')
+    dataset_group.add_argument('--resume', action='store_true', help='Resume from latest model output in output-dir if available')
 
     return parser
 
@@ -44,7 +45,7 @@ def extract_sampling_params(args: dict):
         "temperature": args.pop("temperature"),
         "top_p": args.pop("top_p"),
         "top_k": args.pop("top_k"),
-        "max_model_len": args.pop("max_model_len")
+        # "max_model_len": args.pop("max_model_len")
     }
 
 def create_sampling_params(args: dict, llm: LLM):
@@ -52,7 +53,7 @@ def create_sampling_params(args: dict, llm: LLM):
     temperature = args.pop("temperature")
     top_p = args.pop("top_p")
     top_k = args.pop("top_k")
-    max_model_len = args.pop("max_model_len")   
+    # max_model_len = args.pop("max_model_len")   
     
     # Create sampling params object
     sampling_params = llm.get_default_sampling_params()

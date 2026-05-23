@@ -74,6 +74,10 @@ def parse_model_output(output_text):
         return None
         
     text = output_text.strip()
+
+    # Strip </think> tags if present (common in some thinking models)
+    if "</think>" in text:
+        text = text.split("</think>")[-1].strip()  # Take the part after the last </think>
     
     # Strategy 1: Explicit "Answer: X" or "The answer is X"
     # Search from end to avoid finding reasoning steps like "Option A is bad... so Answer: B"

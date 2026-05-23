@@ -1,5 +1,7 @@
 # Repo Specific
 outputs/
+models/
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
