@@ -7,7 +7,7 @@
 </p>
 
 
-**Official repository for the SAFIRE paper (ACL 2026).**
+**Official repository for the SAFIRE paper (EMNLP-Findings 2026).**
 
 Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal Naseer.
 
