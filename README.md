@@ -27,9 +27,7 @@ Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal
 
 ## 📢 News
 
-- [07 Apr 2026] SAFIRE is accepted to ACL 2026 Main Conference! Project page is now live.
-- [12 Dec 2025] Refactored code for SAFIRE MLLM evaluation.
-- [27 Oct 2025] SAFIRE: A Safety-Critical Benchmark for Fire and Smoke Scene Reasoning in Multimodal LLMs is submitted to ACL ARR 2025 October Submission.
+- [21 August 2026] SAFIRE is accepted to EMNLP 2026 as Findings! Project page is now live.
 
 ## 🔥 Overview
 
