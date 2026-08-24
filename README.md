@@ -174,7 +174,7 @@ If you find SAFIRE useful in your research, please consider citing our paper:
 @inproceedings{li2026safire,
   title={SAFIRE: Safety-Critical Benchmark for Fine-grained Fire and Smoke Understanding in Multimodal LLMs},
   author={Li, Pengfei and Suryanto, Naufal and Zhang, Sicheng and Alsharid, Mohammad and Naseer, Muzammal},
-  booktitle={Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  booktitle={The 2026 Conference on Empirical Methods in Natural Language Processing},
   year={2026}
 }
 ```
