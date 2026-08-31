@@ -34,7 +34,7 @@ Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal
 **SAFIRE** (**S**afety-**A**ware **Fi**re-smoke **R**easoning **E**valuation) is the first large-scale benchmark designed to evaluate Multimodal Large Language Models (MLLMs) in safety-critical fire and smoke scenarios.
 
 ### 💡 Why Context Matters
-> **Current benchmarks often fail to distinguish between critical fires (e.g., house fires) and benign ones (e.g., campfires), or mistake water vapor for smoke. SAFIRE is designed to test these specific context-aware reasoning capabilities.**
+> **Current benchmarks often fail to distinguish between critical fires (e.g., Residential scenario fires) and benign ones (e.g., campfires), or misinterpret water vapor, haze, cloud as smoke. SAFIRE is designed to test models' specific context-aware reasoning capabilities on fire and smoke.**
 
 <p align="center">
   <img src="assets/SAFIRE_Fig1.png" alt="SAFIRE Overview" width="50%">
@@ -42,8 +42,8 @@ Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal
 
 SAFIRE addresses this by providing:
 
-* **105K** high-quality images across **20 real-world scenarios**.
-* **224K** Multiple-Choice VQA (MCVQA) pairs.
+* **83K** high-quality images across **20 real-world scenarios**.
+* **193K** Multiple-Choice VQA (MCVQA) pairs.
 * **10 Reasoning Dimensions**:
 
 | | |
@@ -51,8 +51,8 @@ SAFIRE addresses this by providing:
 | 🔢 **Target Counting** | 🏷️ **Classification** |
 | 🧠 **General Reasoning** | 🔥 **Fire/Smoke Intention** |
 | 😨 **Emotional Response** | 📖 **Linguistic Polysemy** |
-| 👁️ **Attribute Recognition** | 📐 **Spatial Correlation** |
-| 📍 **Position Identification** | 🚫 **Irrelevant Object Detection** |
+| 👁️ **Fire/smoke Attributes** | 📐 **Spatial Correlation** |
+| 📍 **Position Identification** | 🚫 **Human Presence** |
 
 ## 📂 Dataset Statistics
 
@@ -60,11 +60,11 @@ The dataset is categorized into **5 Groups** and **20 Scenarios**:
 
 | Group | Scenarios |
 | :--- | :--- |
-| 🌿 **Natural Process** | Agriculture, Forest, Volcano, Meteorite |
-| 🏭 **Industrial Process** | Rocket Fire, Gas Flares, Steel Forge |
-| ⚠️ **Accident Process** | House Fire, Car Fire, Garbage Fire, Explosion |
-| 🎆 **Entertainment** | Firework, Hot Balloon, Barbecue, Campfire |
-| 🕯️ **Controlled Process** | Torch Fire, Candlelight, Smoking, Incense, Gas Cooking |
+| 🌿 **Natural Phenomena** | Grassland, Volcano, Forest, Meteor |
+| 🏭 **Industrial Operations** | Aerospace assets, Flare stack, Metal forging  |
+| ⚠️ **Accident Incidents** | Residential fire, Explosion, Vehicle fire|
+| 🎆 **Recreational Activities** | Firework, SkyLantern, Barbecue, Campfire, Torch |
+| 🕯️ **Civil Controlled Scenes** | Waste disposal, Gas stove, Incense burning, Candle, Smoking |
 
 ---
 
@@ -155,7 +155,7 @@ This output structure facilitates tracking performance metrics across different 
 </details>
 
 ### 2. Vision-Language Encoder Evaluation
-> Fine-tuned domain specific [FireCLIP](https://huggingface.co/fesvhtr/FireCLIP-ViT-L14-336) can be found in our Hugging Face repo.
+<!-- > Fine-tuned domain specific [FireCLIP](https://huggingface.co/fesvhtr/FireCLIP-ViT-L14-336) can be found in our Hugging Face repo. -->
 
 To conduct scenario-wise `zero-shot` inference, use `safire/evaluate_mme_zero.py`.
 ```bash 
