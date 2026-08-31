@@ -99,15 +99,14 @@ The SAFIRE benchmark consists of multiple datasets hosted on Hugging Face. The e
 
 ### Available Datasets
 
-- **[RISys-Lab/SAFIRE_MCVQA](https://huggingface.co/datasets/RISys-Lab/SAFIRE_MCVQA)** (Multiple Choice QA)
-  - **Subsets**: `mcqa`
-  - **Splits**: `test`
+  - **[RISys-Lab/SAFIRE_193K_mcvqa](https://huggingface.co/datasets/RISys-Lab/SAFIRE_193K_mcvqa)** (193K Multiple Choice QA)
+    - **Subset**: `mcqa`
+    - **Split**: `test`
 
-- **[RISys-Lab/SAFIRE_IMG](https://huggingface.co/datasets/RISys-Lab/SAFIRE_IMG)** (Images with Captions and Scenario Category)
-  - **Subsets1**: `safire_105k`
-  - **Splits1**: `SAFIRE_105K`
-  - **Subsets2**: `safire_11k`
-  - **Splits2**: `train`
+  - **[RISys-Lab/SAFIRE_83K](https://huggingface.co/datasets/RISys-Lab/SAFIRE_83K)** (83K Images with Captions and Scenario
+  Categories)
+    - **Subset**: `data`
+    - **Split**: `train`
 
 <!-- > More datasets will be added soon. -->
 
