@@ -37,7 +37,7 @@ Authors: Pengfei Li, Naufal Suryanto, Sicheng Zhang, Mohammad Alsharid, Muzammal
 > **Current benchmarks often fail to distinguish between critical fires (e.g., Residential scenario fires) and benign ones (e.g., campfires), or misinterpret water vapor, haze, cloud as smoke. SAFIRE is designed to test models' specific context-aware reasoning capabilities on fire and smoke.**
 
 <p align="center">
-  <img src="assets/SAFIRE_Fig1.png" alt="SAFIRE Overview" width="50%">
+  <img src="assets/safire_windmill.png" alt="SAFIRE Overview" width="50%">
 </p>
 
 SAFIRE addresses this by providing:
