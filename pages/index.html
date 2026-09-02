@@ -103,15 +103,17 @@
         </h1>
 
         <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-8 text-lg font-medium text-slate-700">
-            <span>Pengfei Li</span>
-            <span>Naufal Suryanto</span>
-            <span>Sicheng Zhang</span>
-            <span>Mohammad Alsharid</span>
-            <span>Muzammal Naseer</span>
+            <span>Pengfei Li<sup>1</sup></span>
+            <span>Naufal Suryanto<sup>1</sup></span>
+            <span>Sicheng Zhang<sup>1</sup></span>
+            <span>Mohammad Alsharid<sup>1</sup></span>
+            <span>Muzammal Naseer<sup>1,2</sup></span>
         </div>
 
-        <div class="text-lg font-semibold text-slate-500 mb-8 tracking-wide">
-            Khalifa University
+        <div class="text-lg font-semibold text-slate-500 mb-8 tracking-wide space-y-1">
+            <div><sup>1</sup>Khalifa University</div>
+            <div><sup>2</sup>University of Western Australia</div>
+            <div class="text-base font-medium tracking-normal">muhammadmuzammal.naseer@ku.ac.ae</div>
         </div>
 
         <div class="flex flex-wrap justify-center gap-4 mt-10">
@@ -288,17 +290,17 @@
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">Illustrative MCVQA Samples</h2>
                 <p class="text-lg text-slate-600 max-w-3xl mx-auto">
-                    The 12 examples below follow SAFIRE's MCVQA schema and cover classification, counting,
-                    localization, fire-smoke attributes, spatial correlation, human presence, intention,
-                    emotional response, and predictive reasoning.
+                    The 12 examples below follow the paper's sample set and span scene understanding, target counting,
+                    classification, positional information, spatial relation, danger level, broader indication,
+                    reasoning, fire intention, fire environment, prediction, and language polysemy.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Sample 1: Classification -->
+                <!-- Sample 1: Scene Understanding -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Classification <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Scene Understanding <span
                                 class="text-slate-500 font-normal">(Open Grassland)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/1.agriculture.png" alt="Open Grassland fire" class="w-full h-full object-cover"
@@ -308,14 +310,14 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What kind of smoke/flame is this?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What kind of flame is this?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Industrial fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Aerial fireworks burst,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Home accident fire,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                A. Open grassland fire</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Building fire</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Flare stack</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Fire icon</li>
+                                D. Crop-residue fire</li>
                         </ul>
                     </div>
                 </div>
@@ -332,21 +334,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">How many distinct fire or smoke sources are visible?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">How many distinct fire are visible?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. None</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. None,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                B. One</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Two</li>
+                                B. One,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Two,</li>
                             <li class="px-3 py-1.5 rounded-md bg-slate-50">D. More than two</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 3: Fire/Smoke Intention -->
+                <!-- Sample 3: Classification -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Intention <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Classification <span
                                 class="text-slate-500 font-normal">(Campfire-Bonfire)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/3.campfire.png" alt="Campfire-Bonfire" class="w-full h-full object-cover"
@@ -356,21 +358,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the purpose of this fire?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What kind of smoke/flare?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                A. Recreational campfire or cooking</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Industrial operation</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Natural volcanic eruption</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Vehicle accident</li>
+                                A. Campfire or fire pit</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Grill or cooking fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Not Applicable,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Icon or symbolic fire</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 4: Position Identification -->
+                <!-- Sample 4: Positional Info -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Position Identification <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Positional Info. <span
                                 class="text-slate-500 font-normal">(Aerospace Operation)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/4.rocket.png" alt="Aerospace Operation" class="w-full h-full object-cover"
@@ -380,21 +382,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">Where is the fire located in the scene?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">Where is the fire located?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Left side</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Left side,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                B. Right side</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Center</li>
+                                B. Right side,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Centre,</li>
                             <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not visible</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 5: Fire/Smoke Spatial Correlation -->
+                <!-- Sample 5: Spatial Relation -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Spatial Correlation <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Spatial Relation <span
                                 class="text-slate-500 font-normal">(Firework)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/5.firework.png" alt="Firework" class="w-full h-full object-cover"
@@ -404,21 +406,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the spatial relationship between the smoke and the fire?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the spatial relation?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                A. Smoke around or above the firework burst</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Smoke to the left of the fire</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Smoke to the right of the fire</li>
+                                A. Smoke above,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Smoke to the left,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Smoke to the right,</li>
                             <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not applicable</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 6: General Reasoning -->
+                <!-- Sample 6: Danger Level -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">General Reasoning <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Danger Level <span
                                 class="text-slate-500 font-normal">(Volcano)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/6.volcano.png" alt="Volcano" class="w-full h-full object-cover"
@@ -428,21 +430,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the apparent danger level of this fire?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is the apparent danger level?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Low</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Moderate</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. High</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Low,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Moderate,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                D. Extreme</li>
+                                C. High</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. N/A</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 7: Human Presence -->
+                <!-- Sample 7: Broader Indication -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Human Presence <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Broader Indication <span
                                 class="text-slate-500 font-normal">(Flare Stack)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/7.gas_exploitation.png" alt="Flare Stack" class="w-full h-full object-cover"
@@ -452,21 +454,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">Are there people or animals in the image?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">Is the fire controlled?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                A. No</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. People present</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Animals present</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not sure</li>
+                                A. Yes,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. No,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. No fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Cannot tell</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 8: Emotional Response -->
+                <!-- Sample 8: Reasoning -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Emotional Response <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Reasoning <span
                                 class="text-slate-500 font-normal">(Vehicle Fire)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/8.burning_car.png" alt="Vehicle Fire" class="w-full h-full object-cover"
@@ -476,45 +478,45 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">How would people react to this smoke/fire?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">How would people react to this fire/smoke?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Take photos only</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Ignore it</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                C. Call emergency services or evacuate</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Watch from nearby</li>
+                                A. Call for help,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Ignore it,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Evacuate the area,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Take pictures</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 9: Fire/Smoke Intention -->
+                <!-- Sample 9: Fire Intention -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Intention <span
-                                class="text-slate-500 font-normal">(Torch Parade)</span></div>
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fire Intention <span
+                                class="text-slate-500 font-normal">(Torch)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
-                            <img src="static/examples/9.torch.png" alt="Torch Parade" class="w-full h-full object-cover"
+                            <img src="static/examples/9.torch.png" alt="Torch" class="w-full h-full object-cover"
                                 onerror="this.style.display='none'">
                             <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
-                                style="z-index:-1">Image Placeholder<br>(Torch Parade)</div>
+                                style="z-index:-1">Image Placeholder<br>(Torch)</div>
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
                         <p class="font-semibold text-slate-900 mb-3 text-sm">What is the purpose of this fire?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Accident</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Industrial operation</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Accident,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                C. Cultural or ceremonial activity</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Natural event</li>
+                                B. Entertainment,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Industry production,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Culture activity</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 10: Fire/Smoke Attributes -->
+                <!-- Sample 10: Fire Environment -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Attributes <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Fire Environment <span
                                 class="text-slate-500 font-normal">(Candlelight)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/10.candlelight.png" alt="Candlelight" class="w-full h-full object-cover"
@@ -524,21 +526,21 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What time of day does the image suggest?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What time of the day does this fire suggests?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Daytime</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Nighttime</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Day time,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Nighttime,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                C. Indoor lighting</li>
+                                C. Indoor lighting,</li>
                             <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not determinable</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 11: General Reasoning -->
+                <!-- Sample 11: Prediction -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">General Reasoning <span
+                        <div class="font-bold text-slate-800 text-sm mb-1">Prediction <span
                                 class="text-slate-500 font-normal">(Incense Burning)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
                             <img src="static/examples/11.incense.png" alt="Incense Burning" class="w-full h-full object-cover"
@@ -548,38 +550,38 @@
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">What will happen next to the fire/smoke?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What will happen next to the Fire/Smoke?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Fire expands</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">A. Fire expands,</li>
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                B. Smoke disperses gradually</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Fire quenches immediately</li>
+                                B. Smoke disperses,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Fire quenches,</li>
                             <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Explosion occurs</li>
                         </ul>
                     </div>
                 </div>
-                <!-- Sample 12: Fire/Smoke Attributes -->
+                <!-- Sample 12: Language Polysemy -->
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
                     <div class="bg-slate-100 p-4 border-b border-slate-200">
-                        <div class="font-bold text-slate-800 text-sm mb-1">Fire/Smoke Attributes <span
-                                class="text-slate-500 font-normal">(Sky Lantern-Hot Balloon)</span></div>
+                        <div class="font-bold text-slate-800 text-sm mb-1">Language Polysemy <span
+                                class="text-slate-500 font-normal">(Meteorite Fire)</span></div>
                         <div class="w-full h-32 bg-slate-300 rounded-lg overflow-hidden relative">
-                            <img src="static/examples/12.balloon.png" alt="Sky Lantern-Hot Balloon" class="w-full h-full object-cover"
+                            <img src="static/examples/15.meteorite.png" alt="Meteorite Fire" class="w-full h-full object-cover"
                                 onerror="this.style.display='none'">
                             <div class="absolute inset-0 flex items-center justify-center text-slate-500 text-xs text-center px-2 bg-slate-200"
-                                style="z-index:-1">Image Placeholder<br>(Sky Lantern-Hot Balloon)</div>
+                                style="z-index:-1">Image Placeholder<br>(Meteorite Fire)</div>
                         </div>
                     </div>
                     <div class="p-5 flex-grow">
-                        <p class="font-semibold text-slate-900 mb-3 text-sm">Are flames visible?</p>
+                        <p class="font-semibold text-slate-900 mb-3 text-sm">What is &quot;on fire&quot; means here?</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li
                                 class="px-3 py-1.5 rounded-md bg-orange-50 text-orange-700 font-bold border border-orange-200">
-                                A. Yes</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. No</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Not sure</li>
-                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Not applicable</li>
+                                A. Literal Fire,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">B. Excited situation,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">C. Under attack,</li>
+                            <li class="px-3 py-1.5 rounded-md bg-slate-50">D. Figurative speech</li>
                         </ul>
                     </div>
                 </div>
