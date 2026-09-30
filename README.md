@@ -1,7 +1,7 @@
 # <img src="assets/safire.png" alt="SAFIRE" width="20"/> SAFIRE: Safety-Critical Benchmark for Fine-grained Fire and Smoke Understanding in Multimodal LLMs
 
 <p align="center">
-  📄 <a href="#">Paper</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+  📄 <a href="https://arxiv.org/abs/2609.07823">Paper</a>&nbsp;&nbsp;|&nbsp;&nbsp;
   🌐 <a href="https://risys-lab.github.io/SAFIRE">Project Page</a>&nbsp;&nbsp;|&nbsp;&nbsp;
   📘 <a href="https://huggingface.co/collections/RISys-Lab/safire-datasets-benchmarks-and-model">Dataset and Benchmarks</a>
 </p>
